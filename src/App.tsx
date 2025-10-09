@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle, theme } from "./styles";
+//@ts-ignore
 import PortfolioApp from "./components/Portfolio/PortfolioApp";
 import { Routes as FrontendRoutes } from "./routes";
 

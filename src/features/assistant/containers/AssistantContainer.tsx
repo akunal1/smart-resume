@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAssistantStore } from "../state";
-import { askAssistant, streamAssistant } from "../services";
+import { askAssistant } from "../services";
 import { useSpeechInput, useTTS } from "../hooks";
 import { AssistantView } from "../views/AssistantView";
 import { NameModal } from "../components/NameModal";
 import MeetingEmailModal from "../../scheduling/components/MeetingEmailModal";
 import { useMeetingDetector } from "../../scheduling/hooks/useMeetingDetector";
 import { schedulingController } from "../../scheduling/controllers/schedulingController";
-import { ChatMessage, Mode } from "../../scheduling/types";
+import { Mode } from "../../scheduling/types";
 
 export const AssistantContainer = () => {
   const navigate = useNavigate();
@@ -23,15 +23,11 @@ export const AssistantContainer = () => {
     voiceEnabled,
     micEnabled,
     currentInput,
-    cancelToken,
     userName,
     addMessage,
     setLoading,
-    setStreaming,
     toggleVoice,
-    toggleMic,
     setCurrentInput,
-    updateLastMessage,
     setCancelToken,
     cancelRequest,
     setUserName,
@@ -82,7 +78,7 @@ export const AssistantContainer = () => {
     setShowSchedulingModal(true);
   }, []);
 
-  const { shouldOpen, suggestedMode, confidence } = useMeetingDetector({
+  const { shouldOpen, suggestedMode } = useMeetingDetector({
     messages: memoizedMessages,
     onModalOpen: handleModalOpen,
     isModalOpen: showSchedulingModal,
@@ -147,9 +143,6 @@ export const AssistantContainer = () => {
         }
         return;
       }
-
-      // Check if this query should trigger a meeting modal instead of API call
-      const content = query.toLowerCase();
 
       // Remove client-side meeting keyword detection - let server handle it
       // The server will return appropriate response and set showMeetingPopup flag if needed

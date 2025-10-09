@@ -1,6 +1,63 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { SPEECH_CONFIG, TTS_CONFIG } from "../constants";
 
+// Declare SpeechRecognition interface for TypeScript
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+
+  interface SpeechRecognitionEvent extends Event {
+    results: SpeechRecognitionResultList;
+    resultIndex: number;
+  }
+
+  interface SpeechRecognitionErrorEvent extends Event {
+    error: string;
+    message: string;
+  }
+
+  interface SpeechRecognitionResultList {
+    readonly length: number;
+    item(index: number): SpeechRecognitionResult;
+    [index: number]: SpeechRecognitionResult;
+  }
+
+  interface SpeechRecognitionResult {
+    readonly length: number;
+    item(index: number): SpeechRecognitionAlternative;
+    [index: number]: SpeechRecognitionAlternative;
+    readonly isFinal: boolean;
+  }
+
+  interface SpeechRecognitionAlternative {
+    readonly transcript: string;
+    readonly confidence: number;
+  }
+
+  interface SpeechRecognition extends EventTarget {
+    lang: string;
+    maxAlternatives: number;
+    continuous: boolean;
+    interimResults: boolean;
+    onresult:
+      | ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any)
+      | null;
+    onend: ((this: SpeechRecognition, ev: Event) => any) | null;
+    onerror:
+      | ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => any)
+      | null;
+    start(): void;
+    stop(): void;
+  }
+
+  var SpeechRecognition: {
+    prototype: SpeechRecognition;
+    new (): SpeechRecognition;
+  };
+}
+
 export const useSpeechInput = () => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -20,7 +77,7 @@ export const useSpeechInput = () => {
         recognitionRef.current.continuous = SPEECH_CONFIG.CONTINUOUS;
         recognitionRef.current.interimResults = SPEECH_CONFIG.INTERIM_RESULTS;
 
-        recognitionRef.current.onresult = (event) => {
+        recognitionRef.current.onresult = (event: any) => {
           console.log("Speech recognition result:", event);
           let finalTranscript = "";
           let interimTranscript = "";
@@ -47,7 +104,7 @@ export const useSpeechInput = () => {
           setInterimTranscript("");
         };
 
-        recognitionRef.current.onerror = (event) => {
+        recognitionRef.current.onerror = (event: any) => {
           console.error("Speech recognition error:", event.error, event);
           setIsListening(false);
           setInterimTranscript("");

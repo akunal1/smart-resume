@@ -1,153 +1,153 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import { Mode, MeetingRequest, EmailRequest } from '../types'
-import { DEFAULT_TIMEZONE, MEETING_DURATIONS } from '../consts'
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { Mode, MeetingRequest, EmailRequest } from "../types";
+import { DEFAULT_TIMEZONE, MEETING_DURATIONS } from "../consts";
 
 interface MeetingEmailModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onSubmit: (data: MeetingRequest | EmailRequest, mode: Mode) => Promise<void>
-  suggestedMode?: Mode
-  isLoading?: boolean
-  error?: string
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: MeetingRequest | EmailRequest, mode: Mode) => Promise<void>;
+  suggestedMode?: Mode;
+  isLoading?: boolean;
+  error?: string;
 }
 
 interface FormData {
-  userEmail: string
-  mode: Mode
-  description: string
-  date: string
-  time: string
-  duration: number
+  userEmail: string;
+  mode: Mode;
+  description: string;
+  date: string;
+  time: string;
+  duration: number;
 }
 
 const MeetingEmailModal: React.FC<MeetingEmailModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
-  suggestedMode = 'email',
+  suggestedMode = "email",
   isLoading = false,
   error,
 }) => {
-  const [step, setStep] = useState<1 | 2>(1)
+  const [step, setStep] = useState<1 | 2>(1);
   const [formData, setFormData] = useState<FormData>({
-    userEmail: '',
+    userEmail: "",
     mode: suggestedMode,
-    description: '',
-    date: '',
-    time: '',
+    description: "",
+    date: "",
+    time: "",
     duration: 30,
-  })
+  });
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string>
-  >({})
+  >({});
 
   useEffect(() => {
     if (isOpen) {
-      setStep(1)
-      setFormData((prev) => ({ ...prev, mode: suggestedMode }))
-      setValidationErrors({})
+      setStep(1);
+      setFormData((prev) => ({ ...prev, mode: suggestedMode }));
+      setValidationErrors({});
     }
-  }, [isOpen, suggestedMode])
+  }, [isOpen, suggestedMode]);
 
   const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const validateStep1 = (): boolean => {
-    const errors: Record<string, string> = {}
+    const errors: Record<string, string> = {};
 
     if (!formData.userEmail.trim()) {
-      errors.userEmail = 'Email is required'
+      errors.userEmail = "Email is required";
     } else if (!validateEmail(formData.userEmail)) {
-      errors.userEmail = 'Please enter a valid email address'
+      errors.userEmail = "Please enter a valid email address";
     }
 
-    setValidationErrors(errors)
-    return Object.keys(errors).length === 0
-  }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const validateStep2 = (): boolean => {
-    const errors: Record<string, string> = {}
+    const errors: Record<string, string> = {};
 
-    if (formData.mode === 'meeting') {
+    if (formData.mode === "meeting") {
       if (!formData.date) {
-        errors.date = 'Date is required'
+        errors.date = "Date is required";
       }
       if (!formData.time) {
-        errors.time = 'Time is required'
+        errors.time = "Time is required";
       }
 
       if (formData.date && formData.time) {
-        const meetingDateTime = new Date(`${formData.date}T${formData.time}`)
-        const now = new Date()
+        const meetingDateTime = new Date(`${formData.date}T${formData.time}`);
+        const now = new Date();
 
         if (meetingDateTime <= now) {
-          errors.time = 'Meeting time must be in the future'
+          errors.time = "Meeting time must be in the future";
         }
       }
     }
 
-    setValidationErrors(errors)
-    return Object.keys(errors).length === 0
-  }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleNext = () => {
     if (validateStep1()) {
-      setStep(2)
+      setStep(2);
     }
-  }
+  };
 
   const handleSubmit = async () => {
-    if (!validateStep2()) return
+    if (!validateStep2()) return;
 
     try {
-      if (formData.mode === 'meeting') {
+      if (formData.mode === "meeting") {
         // Convert date/time to ISO strings
-        const startDateTime = new Date(`${formData.date}T${formData.time}`)
+        const startDateTime = new Date(`${formData.date}T${formData.time}`);
         const endDateTime = new Date(
           startDateTime.getTime() + formData.duration * 60000
-        )
+        );
 
         const meetingData: MeetingRequest = {
           userEmail: formData.userEmail,
           dateISO: startDateTime.toISOString(),
           endDateISO: endDateTime.toISOString(),
           description: formData.description,
-          attendees: [formData.userEmail, 'mail.kunal71@gmail.com'],
+          attendees: [formData.userEmail, "mail.kunal71@gmail.com"],
           timezone: DEFAULT_TIMEZONE,
-          summary: 'Meeting scheduled via AI Assistant',
-          conversation: 'Conversation history will be added by the system',
-        }
+          summary: "Meeting scheduled via AI Assistant",
+          conversation: "Conversation history will be added by the system",
+        };
 
-        await onSubmit(meetingData, 'meeting')
+        await onSubmit(meetingData, "meeting");
       } else {
         const emailData: EmailRequest = {
           userEmail: formData.userEmail,
           description: formData.description,
-          summary: 'Email sent via AI Assistant',
-          conversation: 'Conversation history will be added by the system',
-        }
+          summary: "Email sent via AI Assistant",
+          conversation: "Conversation history will be added by the system",
+        };
 
-        await onSubmit(emailData, 'email')
+        await onSubmit(emailData, "email");
       }
 
-      onClose()
+      onClose();
     } catch (error) {
-      console.error('Submit error:', error)
+      console.error("Submit error:", error);
     }
-  }
+  };
 
   const handleInputChange = (field: keyof FormData, value: string | number) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      setValidationErrors((prev) => ({ ...prev, [field]: '' }))
+      setValidationErrors((prev) => ({ ...prev, [field]: "" }));
     }
-  }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <ModalOverlay onClick={onClose}>
@@ -155,10 +155,10 @@ const MeetingEmailModal: React.FC<MeetingEmailModalProps> = ({
         <ModalHeader>
           <ModalTitle>
             {step === 1
-              ? 'Schedule Meeting or Send Email'
-              : formData.mode === 'meeting'
-                ? 'Schedule Meeting'
-                : 'Send Email'}
+              ? "Schedule Meeting or Send Email"
+              : formData.mode === "meeting"
+                ? "Schedule Meeting"
+                : "Send Email"}
           </ModalTitle>
           <CloseButton onClick={onClose}>×</CloseButton>
         </ModalHeader>
@@ -173,7 +173,7 @@ const MeetingEmailModal: React.FC<MeetingEmailModalProps> = ({
                 id="userEmail"
                 type="email"
                 value={formData.userEmail}
-                onChange={(e) => handleInputChange('userEmail', e.target.value)}
+                onChange={(e) => handleInputChange("userEmail", e.target.value)}
                 placeholder="your.email@example.com"
                 hasError={!!validationErrors.userEmail}
               />
@@ -184,8 +184,8 @@ const MeetingEmailModal: React.FC<MeetingEmailModalProps> = ({
 
             <ModeSelector>
               <ModeOption
-                selected={formData.mode === 'email'}
-                onClick={() => handleInputChange('mode', 'email')}
+                selected={formData.mode === "email"}
+                onClick={() => handleInputChange("mode", "email")}
               >
                 <ModeIcon>📧</ModeIcon>
                 <ModeTitle>Simple Email</ModeTitle>
@@ -195,8 +195,8 @@ const MeetingEmailModal: React.FC<MeetingEmailModalProps> = ({
               </ModeOption>
 
               <ModeOption
-                selected={formData.mode === 'meeting'}
-                onClick={() => handleInputChange('mode', 'meeting')}
+                selected={formData.mode === "meeting"}
+                onClick={() => handleInputChange("mode", "meeting")}
               >
                 <ModeIcon>📅</ModeIcon>
                 <ModeTitle>Schedule Meeting</ModeTitle>
@@ -221,7 +221,7 @@ const MeetingEmailModal: React.FC<MeetingEmailModalProps> = ({
           </StepContent>
         ) : (
           <StepContent>
-            {formData.mode === 'meeting' ? (
+            {formData.mode === "meeting" ? (
               <>
                 <FormGroup>
                   <Label htmlFor="date">Date *</Label>
@@ -229,8 +229,8 @@ const MeetingEmailModal: React.FC<MeetingEmailModalProps> = ({
                     id="date"
                     type="date"
                     value={formData.date}
-                    onChange={(e) => handleInputChange('date', e.target.value)}
-                    min={new Date().toISOString().split('T')[0]}
+                    onChange={(e) => handleInputChange("date", e.target.value)}
+                    min={new Date().toISOString().split("T")[0]}
                     hasError={!!validationErrors.date}
                   />
                   {validationErrors.date && (
@@ -244,7 +244,7 @@ const MeetingEmailModal: React.FC<MeetingEmailModalProps> = ({
                     id="time"
                     type="time"
                     value={formData.time}
-                    onChange={(e) => handleInputChange('time', e.target.value)}
+                    onChange={(e) => handleInputChange("time", e.target.value)}
                     hasError={!!validationErrors.time}
                   />
                   {validationErrors.time && (
@@ -258,7 +258,7 @@ const MeetingEmailModal: React.FC<MeetingEmailModalProps> = ({
                     id="duration"
                     value={formData.duration}
                     onChange={(e) =>
-                      handleInputChange('duration', parseInt(e.target.value))
+                      handleInputChange("duration", parseInt(e.target.value))
                     }
                   >
                     {MEETING_DURATIONS.map((duration) => (
@@ -270,28 +270,28 @@ const MeetingEmailModal: React.FC<MeetingEmailModalProps> = ({
                 </FormGroup>
 
                 <TimezoneInfo>
-                  Timezone: {DEFAULT_TIMEZONE.replace('_', ' ')}
+                  Timezone: {DEFAULT_TIMEZONE.replace("_", " ")}
                 </TimezoneInfo>
               </>
             ) : null}
 
             <FormGroup>
               <Label htmlFor="description">
-                {formData.mode === 'meeting'
-                  ? 'Meeting Description'
-                  : 'Email Message'}{' '}
+                {formData.mode === "meeting"
+                  ? "Meeting Description"
+                  : "Email Message"}{" "}
                 (Optional)
               </Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) =>
-                  handleInputChange('description', e.target.value)
+                  handleInputChange("description", e.target.value)
                 }
                 placeholder={
-                  formData.mode === 'meeting'
-                    ? 'Add any additional context for the meeting...'
-                    : 'Add any additional message for the email...'
+                  formData.mode === "meeting"
+                    ? "Add any additional context for the meeting..."
+                    : "Add any additional message for the email..."
                 }
                 rows={3}
               />
@@ -301,20 +301,20 @@ const MeetingEmailModal: React.FC<MeetingEmailModalProps> = ({
               <BackButton onClick={() => setStep(1)}>Back</BackButton>
               <SubmitButton onClick={handleSubmit} disabled={isLoading}>
                 {isLoading
-                  ? 'Processing...'
-                  : formData.mode === 'meeting'
-                    ? 'Schedule Meeting'
-                    : 'Send Email'}
+                  ? "Processing..."
+                  : formData.mode === "meeting"
+                    ? "Schedule Meeting"
+                    : "Send Email"}
               </SubmitButton>
             </ButtonGroup>
           </StepContent>
         )}
       </ModalContent>
     </ModalOverlay>
-  )
-}
+  );
+};
 
-export default MeetingEmailModal
+export default MeetingEmailModal;
 
 // Styled Components
 const ModalOverlay = styled.div`
@@ -329,7 +329,7 @@ const ModalOverlay = styled.div`
   justify-content: center;
   z-index: 1000;
   padding: ${({ theme }) => theme.spacing.md};
-`
+`;
 
 const ModalContent = styled.div`
   background: ${({ theme }) => theme.colors.background};
@@ -339,7 +339,7 @@ const ModalContent = styled.div`
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-`
+`;
 
 const ModalHeader = styled.div`
   display: flex;
@@ -347,14 +347,14 @@ const ModalHeader = styled.div`
   justify-content: space-between;
   padding: ${({ theme }) => theme.spacing.lg};
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-`
+`;
 
 const ModalTitle = styled.h2`
   margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.text};
-`
+`;
 
 const CloseButton = styled.button`
   background: none;
@@ -373,7 +373,7 @@ const CloseButton = styled.button`
   &:hover {
     background: rgba(0, 0, 0, 0.05);
   }
-`
+`;
 
 const ErrorMessage = styled.div`
   background: #fee;
@@ -383,28 +383,28 @@ const ErrorMessage = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius};
   font-size: 0.9rem;
   border: 1px solid #fcc;
-`
+`;
 
 const StepContent = styled.div`
   padding: ${({ theme }) => theme.spacing.lg};
-`
+`;
 
 const FormGroup = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
-`
+`;
 
 const Label = styled.label`
   display: block;
   margin-bottom: ${({ theme }) => theme.spacing.sm};
   font-weight: 500;
   color: ${({ theme }) => theme.colors.text};
-`
+`;
 
 const Input = styled.input<{ hasError?: boolean }>`
   width: 100%;
   padding: ${({ theme }) => theme.spacing.md};
   border: 1px solid
-    ${({ hasError, theme }) => (hasError ? '#e53e3e' : 'rgba(0, 0, 0, 0.2)')};
+    ${({ hasError }) => (hasError ? "#e53e3e" : "rgba(0, 0, 0, 0.2)")};
   border-radius: ${({ theme }) => theme.borderRadius};
   font-size: 1rem;
   background: ${({ theme }) => theme.colors.surface};
@@ -414,7 +414,7 @@ const Input = styled.input<{ hasError?: boolean }>`
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
   }
-`
+`;
 
 const Select = styled.select`
   width: 100%;
@@ -429,7 +429,7 @@ const Select = styled.select`
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
   }
-`
+`;
 
 const Textarea = styled.textarea`
   width: 100%;
@@ -446,67 +446,67 @@ const Textarea = styled.textarea`
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
   }
-`
+`;
 
 const FieldError = styled.div`
   color: #e53e3e;
   font-size: 0.875rem;
   margin-top: ${({ theme }) => theme.spacing.xs};
-`
+`;
 
 const ModeSelector = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: ${({ theme }) => theme.spacing.md};
   margin: ${({ theme }) => theme.spacing.lg} 0;
-`
+`;
 
 const ModeOption = styled.div<{ selected: boolean }>`
   padding: ${({ theme }) => theme.spacing.lg};
   border: 2px solid
     ${({ selected, theme }) =>
-      selected ? theme.colors.primary : 'rgba(0, 0, 0, 0.1)'};
+      selected ? theme.colors.primary : "rgba(0, 0, 0, 0.1)"};
   border-radius: ${({ theme }) => theme.borderRadius};
   cursor: pointer;
   text-align: center;
   transition: all 0.2s ease;
-  background: ${({ selected, theme }) =>
-    selected ? 'rgba(59, 130, 246, 0.05)' : 'transparent'};
+  background: ${({ selected }) =>
+    selected ? "rgba(59, 130, 246, 0.05)" : "transparent"};
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.primary};
     background: rgba(59, 130, 246, 0.05);
   }
-`
+`;
 
 const ModeIcon = styled.div`
   font-size: 2rem;
   margin-bottom: ${({ theme }) => theme.spacing.sm};
-`
+`;
 
 const ModeTitle = styled.div`
   font-weight: 600;
   margin-bottom: ${({ theme }) => theme.spacing.xs};
   color: ${({ theme }) => theme.colors.text};
-`
+`;
 
 const ModeDescription = styled.div`
   font-size: 0.9rem;
   color: ${({ theme }) => theme.colors.textSecondary};
-`
+`;
 
 const TimezoneInfo = styled.div`
   font-size: 0.875rem;
   color: ${({ theme }) => theme.colors.textSecondary};
   margin-bottom: ${({ theme }) => theme.spacing.md};
-`
+`;
 
 const ButtonGroup = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing.md};
   justify-content: flex-end;
   margin-top: ${({ theme }) => theme.spacing.lg};
-`
+`;
 
 const BaseButton = styled.button`
   padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.lg};
@@ -516,7 +516,7 @@ const BaseButton = styled.button`
   transition: all 0.2s ease;
   border: none;
   font-size: 1rem;
-`
+`;
 
 const CancelButton = styled(BaseButton)`
   background: transparent;
@@ -526,7 +526,7 @@ const CancelButton = styled(BaseButton)`
   &:hover {
     background: rgba(0, 0, 0, 0.05);
   }
-`
+`;
 
 const NextButton = styled(BaseButton)<{ disabled?: boolean }>`
   background: ${({ theme }) => theme.colors.primary};
@@ -540,8 +540,8 @@ const NextButton = styled(BaseButton)<{ disabled?: boolean }>`
     opacity: 0.5;
     cursor: not-allowed;
   }
-`
+`;
 
-const BackButton = styled(CancelButton)``
+const BackButton = styled(CancelButton)``;
 
-const SubmitButton = styled(NextButton)``
+const SubmitButton = styled(NextButton)``;

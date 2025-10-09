@@ -1,18 +1,18 @@
 // Voice Conversation Modal - Main Component
 
-import React from 'react'
-import { VoiceState } from '../types'
-import { useVoiceConversation } from '../hooks/useVoiceConversation'
-import VoiceChatModalView from './VoiceChatModalView'
+import React from "react";
+import { VoiceState } from "../types";
+import { useVoiceConversation } from "../hooks/useVoiceConversation";
+import VoiceChatModalView from "./VoiceChatModalView";
 
 interface VoiceChatModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onContinueChat?: (transcript: string) => void
-  onTranscriptReady?: (transcript: string) => Promise<string>
-  onPartialTranscript?: (transcript: string) => void
-  initialMessage?: string
-  reducedMotion?: boolean
+  isOpen: boolean;
+  onClose: () => void;
+  onContinueChat?: (transcript: string) => void;
+  onTranscriptReady?: (transcript: string) => Promise<string>;
+  onPartialTranscript?: (transcript: string) => void;
+  initialMessage?: string;
+  reducedMotion?: boolean;
 }
 
 export const VoiceChatModal: React.FC<VoiceChatModalProps> = ({
@@ -21,7 +21,6 @@ export const VoiceChatModal: React.FC<VoiceChatModalProps> = ({
   onContinueChat,
   onTranscriptReady,
   onPartialTranscript,
-  initialMessage,
   reducedMotion = false,
 }) => {
   const {
@@ -36,34 +35,34 @@ export const VoiceChatModal: React.FC<VoiceChatModalProps> = ({
       onTranscriptReady ||
       (async (transcript: string) => {
         // Default implementation - just echo the transcript
-        return `Echo: ${transcript}`
+        return `Echo: ${transcript}`;
       }),
     onPartialTranscript:
       onPartialTranscript ||
       ((transcript: string) => {
-        console.log('Partial transcript:', transcript)
+        console.log("Partial transcript:", transcript);
       }),
     onClose,
     isOpen, // Pass isOpen to prevent keyboard shortcuts when modal is closed
-  })
+  });
 
   // Extract state from sessionState
-  const state = sessionState.state
-  const transcript = sessionState.currentTranscript
-  const partialTranscript = sessionState.partialTranscript
-  const audioLevel = sessionState.audioLevel || 0
-  const isRecording = state === VoiceState.LISTENING
+  const state = sessionState.state;
+  const transcript = sessionState.currentTranscript;
+  const partialTranscript = sessionState.partialTranscript;
+  const audioLevel = sessionState.audioLevel || 0;
+  const isRecording = state === VoiceState.LISTENING;
 
   // Handle modal open/close lifecycle
   React.useEffect(() => {
     if (isOpen) {
       // Start the voice modal when opened
-      startModal()
+      startModal();
     } else {
       // Stop the voice modal when closed
-      stopModal()
+      stopModal();
     }
-  }, [isOpen, startModal, stopModal])
+  }, [isOpen, startModal, stopModal]);
 
   // Mock metrics for now - would come from the conversation controller
   const metrics = {
@@ -73,49 +72,49 @@ export const VoiceChatModal: React.FC<VoiceChatModalProps> = ({
     networkLatency: 45,
     totalConversations: 1,
     errorCount: 0,
-  }
+  };
 
   // Handle voice recording toggle
   const handleToggleRecording = () => {
     if (isRecording || state === VoiceState.PROCESSING) {
       // If currently recording or processing, just toggle
-      toggleListening()
+      toggleListening();
     } else {
       // If idle or speaking, interrupt and start fresh
-      interruptAndListen()
+      interruptAndListen();
     }
-  }
+  };
 
   // Handle stop speaking
   const handleStopSpeaking = () => {
     // Note: ConversationController doesn't have direct stop speaking method
     // This would typically interrupt current operations
-    toggleListening()
-  }
+    toggleListening();
+  };
 
   // Handle retry
   const handleRetry = () => {
     if (controller) {
-      controller.interruptAndListen()
+      controller.interruptAndListen();
     }
-  }
+  };
 
   // Handle continue chat - pass transcript to parent
   const handleContinueChat = () => {
-    const finalTranscript = transcript || partialTranscript
+    const finalTranscript = transcript || partialTranscript;
     if (finalTranscript && onContinueChat) {
-      onContinueChat(finalTranscript)
+      onContinueChat(finalTranscript);
     }
-    onClose()
-  }
+    onClose();
+  };
 
   // Determine what user can do
   const canToggleRecording =
     state === VoiceState.IDLE ||
     state === VoiceState.LISTENING ||
-    state === VoiceState.PROCESSING
+    state === VoiceState.PROCESSING;
 
-  const canStopSpeaking = state === VoiceState.SPEAKING
+  const canStopSpeaking = state === VoiceState.SPEAKING;
 
   return (
     <VoiceChatModalView
@@ -134,7 +133,7 @@ export const VoiceChatModal: React.FC<VoiceChatModalProps> = ({
       canStopSpeaking={canStopSpeaking}
       reducedMotion={reducedMotion}
     />
-  )
-}
+  );
+};
 
-export default VoiceChatModal
+export default VoiceChatModal;

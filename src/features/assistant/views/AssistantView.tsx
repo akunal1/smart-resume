@@ -437,8 +437,7 @@ const Header = styled.header`
   position: relative;
   z-index: 10;
   backdrop-filter: blur(10px);
-  border-radius: 0 0 ${({ theme }) => theme.borderRadius}
-    ${({ theme }) => theme.borderRadius};
+  border-radius: 0 0 ${({ theme }) => theme.borderRadius};
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
@@ -463,6 +462,7 @@ const HeaderTopRow = styled.div`
   gap: ${({ theme }) => theme.spacing.md};
 `;
 
+// @ts-ignore - Unused styled component (temporary)
 const Title = styled.h1`
   font-size: 1.8rem;
   font-weight: 700;
@@ -742,49 +742,6 @@ const MessageContentContainer = styled.div`
   line-height: 1.6;
   position: relative;
   z-index: 1;
-`;
-
-const CodeBlock = styled.div`
-  margin: ${({ theme }) => theme.spacing.lg} 0;
-  border-radius: ${({ theme }) => theme.borderRadius};
-  overflow: hidden;
-  border: 1px solid rgba(59, 130, 246, 0.1);
-  background: rgba(59, 130, 246, 0.02);
-`;
-
-const CodeHeader = styled.div`
-  background: rgba(59, 130, 246, 0.05);
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
-  border-bottom: 1px solid rgba(59, 130, 246, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const CodeLanguage = styled.span`
-  font-size: 0.8rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-weight: 500;
-  text-transform: uppercase;
-`;
-
-const CodeContent = styled.pre`
-  margin: 0;
-  padding: ${({ theme }) => theme.spacing.md};
-  background: rgba(0, 0, 0, 0.01);
-  color: ${({ theme }) => theme.colors.text};
-  font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: 0.9rem;
-  line-height: 1.4;
-  overflow-x: auto;
-  white-space: pre;
-`;
-
-const Citation = styled.sup`
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 0.8rem;
-  margin-left: 2px;
-  vertical-align: super;
 `;
 
 const Link = styled.a`
