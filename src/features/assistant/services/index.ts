@@ -1,17 +1,12 @@
 import { AskRequest, AskResponse } from "../types";
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
+import { apiCall, getApiBaseUrl, API_CONFIG } from "../../../config/api";
 
 export const askAssistant = async (
   request: AskRequest,
   signal?: AbortSignal
 ): Promise<AskResponse> => {
-  const response = await fetch(`${API_BASE_URL}/api/assistant/ask`, {
+  const response = await apiCall(API_CONFIG.ENDPOINTS.ASSISTANT.ASK, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(request),
     signal, // Add abort signal
   });
@@ -29,8 +24,9 @@ export const streamAssistant = (
   onComplete: (fullResponse: string) => void,
   onError: (error: Error) => void
 ): (() => void) => {
+  const baseUrl = getApiBaseUrl();
   const eventSource = new EventSource(
-    `${API_BASE_URL}/api/assistant/ask?stream=true`
+    `${baseUrl}${API_CONFIG.ENDPOINTS.ASSISTANT.ASK}?stream=true`
   );
 
   let fullResponse = "";
@@ -53,11 +49,8 @@ export const streamAssistant = (
 
   // Send the request via POST (since SSE is GET, we need to handle this differently)
   // For simplicity, we'll use fetch for now and implement proper SSE later
-  fetch(`${API_BASE_URL}/api/assistant/ask`, {
+  apiCall(API_CONFIG.ENDPOINTS.ASSISTANT.ASK, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ ...request, options: { streaming: true } }),
   })
     .then(async (response) => {
@@ -73,7 +66,7 @@ export const streamAssistant = (
 };
 
 export const checkHealth = async (): Promise<{ status: string }> => {
-  const response = await fetch(`${API_BASE_URL}/api/health`);
+  const response = await apiCall(API_CONFIG.ENDPOINTS.HEALTH);
   if (!response.ok) {
     throw new Error(`Health check failed: ${response.status}`);
   }

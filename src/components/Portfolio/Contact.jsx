@@ -13,6 +13,7 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
+import { apiCall, API_CONFIG } from "../../config/api";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -44,11 +45,8 @@ const Contact = ({ personalInfo }) => {
     setSubmitStatus(null);
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await apiCall(API_CONFIG.ENDPOINTS.CONTACT, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(formData),
       });
 

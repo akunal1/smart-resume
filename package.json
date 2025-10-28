@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:prod": "VITE_API_BASE_URL=https://smart-resume-backend-vfve.onrender.com vite",
+    "dev:local": "VITE_API_BASE_URL=http://localhost:3002 vite",
     "build": "tsc && vite build",
     "start": "vite",
     "preview": "vite preview",

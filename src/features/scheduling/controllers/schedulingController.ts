@@ -8,25 +8,17 @@ import {
   EmailResponse,
 } from "../types";
 import { MAX_CONVERSATION_LENGTH, MAX_MESSAGES_HISTORY } from "../consts";
+import { apiCall, API_CONFIG } from "../../../config/api";
 
 class SchedulingController {
-  private baseUrl: string;
-
-  constructor(baseUrl: string = "") {
-    this.baseUrl = baseUrl;
-  }
-
   // Generate AI summary from chat history
   async generateSummary(
     chatHistory: ChatMessage[]
   ): Promise<AISummaryResponse> {
     const recentMessages = chatHistory.slice(-MAX_MESSAGES_HISTORY);
 
-    const response = await fetch(`${this.baseUrl}/api/ai/summary`, {
+    const response = await apiCall(API_CONFIG.ENDPOINTS.AI.SUMMARY, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({
         chatHistory: recentMessages,
       }),
@@ -68,11 +60,8 @@ class SchedulingController {
       attendees,
     };
 
-    const response = await fetch(`${this.baseUrl}/api/meetings`, {
+    const response = await apiCall(API_CONFIG.ENDPOINTS.MEETINGS, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(payload),
     });
 
@@ -94,11 +83,8 @@ class SchedulingController {
       throw new Error("User email is required");
     }
 
-    const response = await fetch(`${this.baseUrl}/api/email`, {
+    const response = await apiCall(API_CONFIG.ENDPOINTS.EMAIL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(emailData),
     });
 
