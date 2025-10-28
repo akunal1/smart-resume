@@ -231,7 +231,7 @@ const Experience = ({ workHistory, experience }) => {
                 <div className="text-slate-600">Project Success Rate</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600">9+</div>
+                <div className="text-3xl font-bold text-purple-600">10+</div>
                 <div className="text-slate-600">Years Excellence</div>
               </div>
             </div>
