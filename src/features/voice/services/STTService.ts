@@ -73,11 +73,18 @@ export class WebSpeechSTTProvider implements STTProvider {
       (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      throw new Error("Speech recognition not supported in this browser");
+      console.warn("Speech recognition not supported in this browser");
+      // Don't throw error, just log warning and leave recognition as null
+      return;
     }
 
-    this.recognition = new SpeechRecognition();
-    this.setupRecognition();
+    try {
+      this.recognition = new SpeechRecognition();
+      this.setupRecognition();
+    } catch (error) {
+      console.error("Failed to initialize speech recognition:", error);
+      this.recognition = null;
+    }
   }
 
   private setupRecognition(): void {
@@ -161,7 +168,8 @@ export class WebSpeechSTTProvider implements STTProvider {
 
   async start(options: { language: string }): Promise<void> {
     if (!this.recognition) {
-      throw new Error("Speech recognition not available");
+      console.warn("Speech recognition not available - skipping start");
+      return;
     }
 
     if (this.isActive) {
@@ -175,7 +183,8 @@ export class WebSpeechSTTProvider implements STTProvider {
       this.recognition.start();
     } catch (error) {
       this.isActive = false;
-      throw error;
+      console.error("Failed to start speech recognition:", error);
+      // Don't throw, just log the error
     }
   }
 
@@ -233,8 +242,25 @@ export class STTService {
   private onError?: (error: VoiceError) => void;
 
   constructor(provider?: STTProvider) {
-    this.provider = provider || new WebSpeechSTTProvider();
-    this.setupProvider();
+    try {
+      this.provider = provider || new WebSpeechSTTProvider();
+      this.setupProvider();
+    } catch (error) {
+      console.warn("Failed to initialize STT provider:", error);
+      // Create a no-op provider that doesn't crash the app
+      this.provider = this.createNoOpProvider();
+    }
+  }
+
+  private createNoOpProvider(): STTProvider {
+    return {
+      start: () => Promise.resolve(),
+      stop: () => Promise.resolve(),
+      onPartial: () => {},
+      onFinal: () => {},
+      feedAudio: () => {},
+      abort: () => {},
+    };
   }
 
   private setupProvider(): void {
