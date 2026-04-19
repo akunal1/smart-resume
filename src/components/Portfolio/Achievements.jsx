@@ -42,32 +42,11 @@ const Achievements = ({ achievements, certifications }) => {
     },
   ];
 
-  const professionalCerts = [
-    {
-      title: "React Native Certification",
-      issuer: "",
-      year: "2023",
-      level: "Advanced",
-    },
-    {
-      title: "ReactJS Certification",
-      issuer: "",
-      year: "2022",
-      level: "Expert",
-    },
-    {
-      title: "UX/UI Design Certification",
-      issuer: "Google",
-      year: "2021",
-      level: "Professional",
-    },
-    {
-      title: "Infosys Global Agile Developer",
-      issuer: "Infosys Limited",
-      year: "2020",
-      level: "Certified",
-    },
-  ];
+  const accentMap = {
+    Microsoft: { accent: "#0078d4", bg: "#eff6ff" },
+    Google:    { accent: "#ea4335", bg: "#fff5f5" },
+    Infosys:   { accent: "#007cc3", bg: "#f0f9ff" },
+  };
 
   return (
     <section className="py-20 bg-gradient-to-br from-slate-50 to-slate-100">
@@ -82,7 +61,7 @@ const Achievements = ({ achievements, certifications }) => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-16">
+        <div className="flex flex-col gap-16">
           {/* Awards & Recognition */}
           <div>
             <div className="flex items-center mb-8">
@@ -92,7 +71,7 @@ const Achievements = ({ achievements, certifications }) => {
               </h3>
             </div>
 
-            <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {awards.map((award, index) => (
                 <Card
                   key={index}
@@ -140,32 +119,52 @@ const Achievements = ({ achievements, certifications }) => {
               </h3>
             </div>
 
-            <div className="space-y-4 mb-8">
-              {professionalCerts.map((cert, index) => (
-                <Card
-                  key={index}
-                  className="border-slate-200 hover:shadow-md transition-shadow duration-300 bg-white"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-lg font-bold text-slate-800 mb-1">
-                          {cert.title}
-                        </h4>
-                        <p className="text-slate-600 text-sm">{cert.issuer}</p>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm font-medium text-slate-500 mb-1">
-                          {cert.year}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              {certifications.map((cert, index) => {
+                const { accent = "#64748b" } = accentMap[cert.issuer] || {};
+                return (
+                  <Card
+                    key={index}
+                    className="border-slate-200 hover:shadow-lg transition-shadow duration-300 bg-white"
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-start">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 rounded-lg flex items-center justify-center mr-4 overflow-hidden">
+                            <img
+                              src={cert.logo}
+                              alt={cert.issuer}
+                              className="w-8 h-8 object-contain"
+                              onError={(e) => { e.currentTarget.style.display = "none"; }}
+                            />
+                          </div>
                         </div>
-                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                          {cert.level}
-                        </span>
+
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="text-base font-bold text-slate-800 leading-snug">
+                              {cert.title}
+                            </h4>
+                            <span className="text-sm font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full shrink-0 ml-2">
+                              {cert.year}
+                            </span>
+                          </div>
+
+                          <p className="text-sm font-semibold" style={{ color: accent }}>
+                            {cert.issuer}
+                          </p>
+
+                          {cert.credentialId && (
+                            <p className="text-xs text-slate-400 mt-1">
+                              ID: {cert.credentialId}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
 
             {/* Career Statistics */}

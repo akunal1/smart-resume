@@ -34,7 +34,7 @@ export const resumeData = {
     "Eight+ years of experience in web and mobile application development, UI/UX design, and UI design pattern analysis to improve conversion rates",
     "Active participation in design decisions to align deliverables with architectural requirements",
     "Onsite customer coordination, providing information and ensuring successful project delivery",
-    "Development and review of code, documentation, and unit tests. Conducting unit tests and documenting results",
+    "Development and review of code, documentation, and unit tests with documented results",
     "Issue resolution, analysis, estimation, and communication with stakeholders",
   ],
 
@@ -107,10 +107,68 @@ export const resumeData = {
   },
 
   certifications: [
-    "Infosys Global Agile Developer Certification",
-    "React Native",
-    "ReactJS",
-    "UX Design (Google)",
+    {
+      title: "Data Analysis and Visualization with Python",
+      issuer: "Microsoft",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/500px-Microsoft_logo.svg.png",
+      year: "Apr 2026",
+      credentialId: "2PHTDCPV95A2",
+    },
+    {
+      title: "Python Programming Fundamentals",
+      issuer: "Microsoft",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/500px-Microsoft_logo.svg.png",
+      year: "Mar 2026",
+      credentialId: "2HIBXN9C04AZ",
+    },
+    {
+      title: "Create High-Fidelity Designs and Prototypes in Figma",
+      issuer: "Google",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/250px-Google_Favicon_2025.svg.png",
+      year: "Jun 2023",
+    },
+    {
+      title: "Conduct UX Research and Test Early Concepts",
+      issuer: "Google",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/250px-Google_Favicon_2025.svg.png",
+      year: "Jun 2023",
+    },
+    {
+      title: "Build Wireframes and Low-Fidelity Prototypes",
+      issuer: "Google",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/250px-Google_Favicon_2025.svg.png",
+      year: "Apr 2023",
+    },
+    {
+      title: "UX Design Process: Empathize, Define, and Ideate",
+      issuer: "Google",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/250px-Google_Favicon_2025.svg.png",
+      year: "Mar 2023",
+    },
+    {
+      title: "Foundation of User Experience Design",
+      issuer: "Google",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/250px-Google_Favicon_2025.svg.png",
+      year: "Jan 2023",
+    },
+    {
+      title: "React Native",
+      issuer: "Infosys",
+      logo: "https://static.vecteezy.com/system/resources/previews/020/336/451/non_2x/infosys-logo-infosys-icon-free-free-vector.jpg",
+      year: "Aug 2019",
+    },
+    {
+      title: "ReactJS",
+      issuer: "Infosys",
+      logo: "https://static.vecteezy.com/system/resources/previews/020/336/451/non_2x/infosys-logo-infosys-icon-free-free-vector.jpg",
+      year: "Apr 2018",
+    },
+    {
+      title: "Infosys Global Agile Developer",
+      issuer: "Infosys",
+      logo: "https://static.vecteezy.com/system/resources/previews/020/336/451/non_2x/infosys-logo-infosys-icon-free-free-vector.jpg",
+      year: "Sep 2019",
+    },
   ],
 
   achievements: [

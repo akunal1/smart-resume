@@ -1,5 +1,5 @@
 import React from "react";
-import { Code2, Smartphone, Globe2, Wrench } from "lucide-react";
+import { Code2, Smartphone, Globe2, Wrench, BrainCircuit } from "lucide-react";
 import { Progress } from "../ui/progress";
 import { Badge } from "../ui/badge";
 
@@ -11,9 +11,10 @@ const Skills = ({ skills }) => {
       color: "blue",
       items: [
         { name: "React Native", level: 95 },
-        { name: "Redux/Redux-Saga/toolkit", level: 100 },
+        { name: "Redux/ Redux-Saga/ toolkit/ RTK Query/ mmkv", level: 100 },
         { name: "Realm/MongoDB", level: 75 },
         { name: "Expo(Managed/Bare) Development", level: 95 },
+        { name: "Super App", level: 50 },
       ],
     },
     {
@@ -44,9 +45,23 @@ const Skills = ({ skills }) => {
       color: "orange",
       items: [
         { name: "GitHub/VSTS", level: 100 },
-        { name: "VS Code", level: 95 },
+        { name: "VS Code", level: 100 },
+        { name: "Rider", level: 50 },
         { name: "Mapbox Integration", level: 82 },
+        { name: "Google Maps Integration", level: 60 },
         { name: "RN Desktop Apps", level: 60 },
+        { name: "Azure msal login", level: 100 },
+      ],
+    },
+    {
+      title: "AI & Data Science",
+      subtitle: "Emerging Learner",
+      icon: BrainCircuit,
+      color: "teal",
+      items: [
+        { name: "Python Programming Fundamentals", level: 90 },
+        { name: "Data Analysis & Visualization", level: 60 },
+        { name: "Automation and Scripting with Python", level: 5 },
       ],
     },
   ];
@@ -77,6 +92,12 @@ const Skills = ({ skills }) => {
         text: "text-orange-800",
         progress: "bg-orange-500",
       },
+      teal: {
+        bg: "bg-teal-50",
+        border: "border-teal-200",
+        text: "text-teal-800",
+        progress: "bg-teal-500",
+      },
     };
     return colors[color] || colors.blue;
   };
@@ -95,13 +116,13 @@ const Skills = ({ skills }) => {
         </div>
 
         {/* Skills Grid */}
-        <div className="grid lg:grid-cols-2 gap-12 mb-16">
+        <div className="lg:columns-2 gap-12 mb-16 space-y-12">
           {skillCategories.map((category, index) => {
             const colors = getColorClasses(category.color);
             return (
               <div
                 key={index}
-                className={`${colors.bg} ${colors.border} border-2 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300`}
+                className={`${colors.bg} ${colors.border} border-2 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 break-inside-avoid`}
               >
                 <div className="flex items-center mb-6">
                   <div
@@ -109,9 +130,16 @@ const Skills = ({ skills }) => {
                   >
                     <category.icon className={`w-6 h-6 ${colors.text}`} />
                   </div>
-                  <h3 className={`text-2xl font-bold ${colors.text}`}>
-                    {category.title}
-                  </h3>
+                  <div>
+                    <h3 className={`text-2xl font-bold ${colors.text}`}>
+                      {category.title}
+                    </h3>
+                    {category.subtitle && (
+                      <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+                        {category.subtitle}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="space-y-6">
