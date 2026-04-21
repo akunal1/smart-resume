@@ -1,6 +1,13 @@
 import React from "react";
-import { Code2, Smartphone, Globe2, Wrench, BrainCircuit } from "lucide-react";
-import { Progress } from "../ui/progress";
+import {
+  Code2,
+  Smartphone,
+  Globe2,
+  Wrench,
+  BrainCircuit,
+  Blocks,
+} from "lucide-react";
+
 import { Badge } from "../ui/badge";
 
 const Skills = ({ skills }) => {
@@ -31,7 +38,7 @@ const Skills = ({ skills }) => {
     {
       title: "UI/UX & Design",
       icon: Code2,
-      color: "purple",
+      color: "violet",
       items: [
         { name: "UX Design (Figma)", level: 50 },
         { name: "Responsive Design", level: 92 },
@@ -42,7 +49,7 @@ const Skills = ({ skills }) => {
     {
       title: "Tools & Technologies",
       icon: Wrench,
-      color: "orange",
+      color: "cyan",
       items: [
         { name: "GitHub/VSTS", level: 100 },
         { name: "VS Code", level: 100 },
@@ -64,6 +71,16 @@ const Skills = ({ skills }) => {
         { name: "Automation and Scripting with Python", level: 5 },
       ],
     },
+    {
+      title: "Extensions Development",
+      subtitle: "Learner",
+      icon: Blocks,
+      color: "black",
+      items: [
+        { name: "VS-Code Extensions", level: 70 },
+        { name: "Chrome Extensions", level: 40 },
+      ],
+    },
   ];
 
   const getColorClasses = (color) => {
@@ -80,23 +97,29 @@ const Skills = ({ skills }) => {
         text: "text-green-800",
         progress: "bg-green-500",
       },
-      purple: {
-        bg: "bg-purple-50",
-        border: "border-purple-200",
-        text: "text-purple-800",
-        progress: "bg-purple-500",
+      violet: {
+        bg: "bg-violet-50",
+        border: "border-violet-200",
+        text: "text-violet-800",
+        progress: "bg-violet-500",
       },
-      orange: {
-        bg: "bg-orange-50",
-        border: "border-orange-200",
-        text: "text-orange-800",
-        progress: "bg-orange-500",
+      cyan: {
+        bg: "bg-cyan-50",
+        border: "border-cyan-200",
+        text: "text-cyan-800",
+        progress: "bg-cyan-500",
       },
       teal: {
         bg: "bg-teal-50",
         border: "border-teal-200",
         text: "text-teal-800",
         progress: "bg-teal-500",
+      },
+      black: {
+        bg: "bg-gray-800/5",
+        border: "border-gray-800/20",
+        text: "text-gray-900",
+        progress: "bg-gray-800",
       },
     };
     return colors[color] || colors.blue;

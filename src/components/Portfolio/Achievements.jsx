@@ -44,8 +44,8 @@ const Achievements = ({ achievements, certifications }) => {
 
   const accentMap = {
     Microsoft: { accent: "#0078d4", bg: "#eff6ff" },
-    Google:    { accent: "#ea4335", bg: "#fff5f5" },
-    Infosys:   { accent: "#007cc3", bg: "#f0f9ff" },
+    Google: { accent: "#FF8D1B", bg: "#fff5f5" },
+    Infosys: { accent: "#007cc3", bg: "#f0f9ff" },
   };
 
   return (
@@ -135,7 +135,9 @@ const Achievements = ({ achievements, certifications }) => {
                               src={cert.logo}
                               alt={cert.issuer}
                               className="w-8 h-8 object-contain"
-                              onError={(e) => { e.currentTarget.style.display = "none"; }}
+                              onError={(e) => {
+                                e.currentTarget.style.display = "none";
+                              }}
                             />
                           </div>
                         </div>
@@ -150,7 +152,10 @@ const Achievements = ({ achievements, certifications }) => {
                             </span>
                           </div>
 
-                          <p className="text-sm font-semibold" style={{ color: accent }}>
+                          <p
+                            className="text-sm font-semibold"
+                            style={{ color: accent }}
+                          >
                             {cert.issuer}
                           </p>
 
