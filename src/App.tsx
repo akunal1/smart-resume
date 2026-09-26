@@ -1,10 +1,11 @@
 import "./App.css";
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle, theme } from "./styles";
-//@ts-ignore
-import PortfolioApp from "./components/Portfolio/PortfolioApp";
-import { Routes as FrontendRoutes } from "./routes";
+
+const PortfolioPage = lazy(() => import("./features/portfolio/PortfolioPage"));
+const FrontendRoutes = lazy(() => import("./routes").then((m) => ({ default: m.Routes })));
 
 function App() {
   return (
@@ -12,14 +13,15 @@ function App() {
       <GlobalStyle />
       <div className="App">
         <BrowserRouter>
-          <Routes>
-            {/* Resume UI Routes */}
-            <Route path="/" element={<PortfolioApp />} />
+          <Suspense fallback={<div className="min-h-screen bg-[#0A0A0B]" />}>
+            <Routes>
+              <Route path="/" element={<PortfolioPage />} />
 
-            {/* Frontend Routes - Assistant and Voice features */}
-            <Route path="/assistant/*" element={<FrontendRoutes />} />
-            <Route path="/resume/*" element={<FrontendRoutes />} />
-          </Routes>
+              {/* Frontend Routes - Assistant and Voice features */}
+              <Route path="/assistant/*" element={<FrontendRoutes />} />
+              <Route path="/resume/*" element={<FrontendRoutes />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </div>
     </ThemeProvider>

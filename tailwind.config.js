@@ -7,12 +7,20 @@ module.exports = {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			display: ['"Inter Tight"', 'Inter', 'system-ui', 'sans-serif'],
+  			serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+  			mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+  			ink: { DEFAULT: '#0A0A0B', 2: '#111113', 3: '#18181B' },
+  			paper: '#EDE9E1',
+  			ember: '#FF5A1F',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
